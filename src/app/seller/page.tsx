@@ -3,13 +3,14 @@ import { TankGauge } from "@/components/ui/TankGauge";
 import { StatsCard } from "@/components/ui/StatsCard";
 import prisma from "@/lib/prisma";
 import { formatCurrency, formatDate } from "@/lib/utils";
-import { Package, AlertTriangle, TrendingUp, Bell } from "lucide-react";
+import { Package, AlertTriangle, TrendingUp, Bell, DollarSign } from "lucide-react";
 import { subDays } from "date-fns";
+import { DashboardPaymentsClient } from "@/components/dashboard/DashboardPaymentsClient";
 
 export default async function SellerDashboard() {
   const weekAgo = subDays(new Date(), 7);
 
-  const [products, alerts, weekSales] = await Promise.all([
+  const [products, alerts, weekSales, pendingPayments] = await Promise.all([
     prisma.fuelProduct.findMany({ where: { isActive: true }, orderBy: { fuelType: "asc" } }),
     prisma.alert.findMany({ where: { isRead: false }, orderBy: { createdAt: "desc" }, take: 10 }),
     prisma.transactionItem.groupBy({
@@ -17,11 +18,21 @@ export default async function SellerDashboard() {
       where: { transaction: { createdAt: { gte: weekAgo }, type: "SALE", status: "COMPLETED" } },
       _sum: { quantity: true, totalPrice: true },
     }),
+    prisma.transaction.findMany({
+      where: { balance: { gt: 0 }, type: "SALE" },
+      include: { customer: true },
+      orderBy: { createdAt: "desc" },
+      take: 5,
+    }),
   ]);
 
   const lowStockCount = products.filter(p => p.currentStock <= p.minimumStock).length;
   const totalStock = products.reduce((s, p) => s + p.currentStock, 0);
   const weekRevenue = weekSales.reduce((s, i) => s + (i._sum.totalPrice ?? 0), 0);
+  const totalDebt = await prisma.transaction.aggregate({
+    where: { balance: { gt: 0 }, type: "SALE" },
+    _sum: { balance: true },
+  });
 
   return (
     <div>
@@ -30,20 +41,33 @@ export default async function SellerDashboard() {
 
         <div className="grid grid-cols-2 xl:grid-cols-4 gap-4">
           <StatsCard title="Total Stock" value={`${Math.round(totalStock).toLocaleString()} L`} subtitle="All tanks combined" icon={Package} variant="blue" />
-          <StatsCard title="Low Stock Alerts" value={lowStockCount} subtitle="Tanks below minimum" icon={AlertTriangle} variant={lowStockCount > 0 ? "red" : "default"} />
+          <StatsCard title="Pending Payments" value={formatCurrency(totalDebt._sum.balance || 0)} subtitle="Total outstanding debt" icon={DollarSign} variant="red" />
           <StatsCard title="Week Revenue" value={formatCurrency(weekRevenue)} subtitle="Last 7 days" icon={TrendingUp} variant="orange" />
           <StatsCard title="Unread Alerts" value={alerts.length} subtitle="Pending notifications" icon={Bell} variant={alerts.length > 0 ? "red" : "default"} />
         </div>
 
-        {/* Tank overview */}
-        <div>
-          <h2 className="text-sm font-semibold mb-3 text-muted-foreground uppercase tracking-wide">Tank Levels</h2>
-          <div className="grid grid-cols-2 xl:grid-cols-4 gap-4">
-            {products.map(p => (
-              <TankGauge key={p.id} name={p.name} fuelType={p.fuelType} currentStock={p.currentStock}
-                tankCapacity={p.tankCapacity} minimumStock={p.minimumStock} tankNumber={p.tankNumber}
-                sellingPrice={p.sellingPrice} unit={p.unit} />
-            ))}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          {/* Tank overview */}
+          <div className="space-y-4">
+            <h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">Tank Levels</h2>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              {products.map(p => (
+                <TankGauge key={p.id} name={p.name} fuelType={p.fuelType} currentStock={p.currentStock}
+                  tankCapacity={p.tankCapacity} minimumStock={p.minimumStock} tankNumber={p.tankNumber}
+                  sellingPrice={p.sellingPrice} unit={p.unit} />
+              ))}
+            </div>
+          </div>
+
+          {/* Pending Payments List */}
+          <div className="space-y-4">
+            <h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">Pending Payments</h2>
+            <DashboardPaymentsClient pendingPayments={pendingPayments} />
+            {pendingPayments.length > 0 && (
+              <div className="p-3 text-center">
+                <a href="/seller/payments" className="text-xs text-orange-600 font-semibold hover:underline">View All Payments →</a>
+              </div>
+            )}
           </div>
         </div>
 

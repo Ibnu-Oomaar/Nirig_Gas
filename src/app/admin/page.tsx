@@ -12,6 +12,8 @@ import {
   Zap, Calendar, Activity, ChevronRight
 } from "lucide-react";
 import { subDays, startOfDay } from "date-fns";
+import { formatDate } from "@/lib/utils";
+import { DashboardPaymentsClient } from "@/components/dashboard/DashboardPaymentsClient";
 
 async function getDashboardData() {
   const todayStart = startOfDay(new Date());
@@ -32,7 +34,12 @@ async function getDashboardData() {
       take: 8, orderBy: { createdAt: "desc" },
       include: { items: { include: { product: true } }, cashier: true, customer: true },
     }),
-    prisma.transaction.findMany({ where: { status: "PENDING" } }),
+    prisma.transaction.findMany({ 
+      where: { balance: { gt: 0 }, type: "SALE" },
+      include: { customer: true },
+      orderBy: { createdAt: "desc" },
+      take: 5 
+    }),
     prisma.expense.findMany({ where: { date: { gte: weekAgo } } }),
   ]);
 
@@ -71,6 +78,7 @@ async function getDashboardData() {
     todaySales: todayTx.length, weekSales: weekTx.length,
     totalCustomers, totalStock, lowStock,
     pendingPayments: pendingTx.length,
+    pendingTx,
     products, recentTx, chartData, fuelBreakdown, totalExpenses,
   };
 }
@@ -191,6 +199,25 @@ export default async function AdminDashboard() {
               <FuelBreakdownChart data={data.fuelBreakdown} />
             </div>
           </div>
+        </div>
+        
+        {/* Pending Payments Section */}
+        <div className="space-y-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="p-2 rounded-xl bg-red-500/10">
+                <DollarSign className="w-5 h-5 text-red-500" />
+              </div>
+              <div>
+                <h2 className="text-lg font-semibold text-foreground">Pending Payments</h2>
+                <p className="text-sm text-muted-foreground">Customers with outstanding credit balances</p>
+              </div>
+            </div>
+            <a href="/admin/payments" className="text-sm text-orange-600 hover:text-orange-700 flex items-center gap-1 transition-colors">
+              Manage All <ChevronRight className="w-4 h-4" />
+            </a>
+          </div>
+          <DashboardPaymentsClient pendingPayments={data.pendingTx as any} />
         </div>
 
         {/* Recent Transactions Section */}

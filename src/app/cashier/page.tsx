@@ -5,15 +5,17 @@ import { TankGauge } from "@/components/ui/TankGauge";
 import { getSession } from "@/lib/auth";
 import prisma from "@/lib/prisma";
 import { formatCurrency } from "@/lib/utils";
-import { ShoppingCart, DollarSign, Receipt, Package } from "lucide-react";
+import { ShoppingCart, DollarSign, Receipt, Package, ChevronRight } from "lucide-react";
 import { startOfDay } from "date-fns";
 import Link from "next/link";
+import { DashboardPaymentsClient } from "@/components/dashboard/DashboardPaymentsClient";
+import { formatDate } from "@/lib/utils";
 
 export default async function CashierDashboard() {
   const session = await getSession();
   const todayStart = startOfDay(new Date());
 
-  const [todayTx, products, recentTx, shift] = await Promise.all([
+  const [todayTx, products, recentTx, shift, pendingPayments] = await Promise.all([
     prisma.transaction.findMany({
       where: { cashierId: session!.user.id, type: "SALE", status: "COMPLETED", createdAt: { gte: todayStart } },
       include: { items: true },
@@ -26,6 +28,12 @@ export default async function CashierDashboard() {
     }),
     prisma.shift.findFirst({
       where: { userId: session!.user.id, isActive: true },
+    }),
+    prisma.transaction.findMany({
+      where: { balance: { gt: 0 }, type: "SALE" },
+      include: { customer: true },
+      orderBy: { createdAt: "desc" },
+      take: 5,
     }),
   ]);
 
@@ -70,7 +78,19 @@ export default async function CashierDashboard() {
           </div>
         </div>
 
+        {/* Pending Payments */}
+        <div className="space-y-4">
+          <div className="flex items-center justify-between">
+            <h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">Pending Payments</h2>
+            <Link href="/cashier/payments" className="text-xs text-orange-600 font-semibold hover:underline flex items-center gap-1">
+              View All <ChevronRight size={14} />
+            </Link>
+          </div>
+          <DashboardPaymentsClient pendingPayments={pendingPayments} />
+        </div>
+
         {/* Recent */}
+
         <div className="rounded-xl border border-border bg-card">
           <div className="p-5 border-b border-border">
             <h3 className="text-sm font-semibold">My Recent Transactions</h3>

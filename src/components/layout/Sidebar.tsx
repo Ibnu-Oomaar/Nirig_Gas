@@ -18,6 +18,7 @@ const adminNav: NavItem[] = [
   { label: "Inventory", href: "/admin/inventory", icon: Package },
   { label: "Restock Fuel", href: "/admin/restock", icon: RefreshCw },
   { label: "Transactions", href: "/admin/transactions", icon: Receipt },
+  { label: "Payments", href: "/admin/payments", icon: DollarSign },
   { label: "Customers", href: "/admin/customers", icon: Users },
   { label: "Suppliers", href: "/admin/suppliers", icon: Truck },
   { label: "Expenses", href: "/admin/expenses", icon: DollarSign },
@@ -32,6 +33,7 @@ const cashierNav: NavItem[] = [
   { label: "Dashboard", href: "/cashier", icon: LayoutDashboard },
   { label: "New Sale", href: "/cashier/sale", icon: ShoppingCart },
   { label: "Transactions", href: "/cashier/transactions", icon: Receipt },
+  { label: "Payments", href: "/cashier/payments", icon: DollarSign },
   { label: "Customers", href: "/cashier/customers", icon: Users },
   { label: "Inventory", href: "/cashier/inventory", icon: Package },
   { label: "Shift Report", href: "/cashier/shift", icon: BarChart2 },
@@ -40,6 +42,7 @@ const cashierNav: NavItem[] = [
 const sellerNav: NavItem[] = [
   { label: "Dashboard", href: "/seller", icon: LayoutDashboard },
   { label: "Inventory", href: "/seller/inventory", icon: Package },
+  { label: "Payments", href: "/seller/payments", icon: DollarSign },
   { label: "Alerts", href: "/seller/alerts", icon: AlertCircle },
 ];
 

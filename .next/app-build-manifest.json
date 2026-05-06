@@ -26,31 +26,6 @@
       "static/chunks/main-app.js",
       "static/chunks/app/not-found.js"
     ],
-    "/seller/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/seller/page.js"
-    ],
-    "/seller/layout": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/seller/layout.js"
-    ],
-    "/seller/inventory/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/seller/inventory/page.js"
-    ],
-    "/seller/alerts/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/seller/alerts/page.js"
-    ],
-    "/login/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/login/page.js"
-    ],
     "/cashier/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
@@ -61,10 +36,10 @@
       "static/chunks/main-app.js",
       "static/chunks/app/cashier/layout.js"
     ],
-    "/cashier/sale/page": [
+    "/cashier/payments/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/chunks/app/cashier/sale/page.js"
+      "static/chunks/app/cashier/payments/page.js"
     ],
     "/cashier/customers/page": [
       "static/chunks/webpack.js",
@@ -81,6 +56,11 @@
       "static/chunks/main-app.js",
       "static/chunks/app/cashier/shift/page.js"
     ],
+    "/login/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/login/page.js"
+    ],
     "/admin/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
@@ -91,100 +71,45 @@
       "static/chunks/main-app.js",
       "static/chunks/app/admin/layout.js"
     ],
-    "/admin/inventory/page": [
+    "/admin/payments/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/chunks/app/admin/inventory/page.js"
+      "static/chunks/app/admin/payments/page.js"
     ],
-    "/admin/inventory/new/page": [
+    "/seller/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/chunks/app/admin/inventory/new/page.js"
+      "static/chunks/app/seller/page.js"
     ],
-    "/admin/restock/page": [
+    "/seller/layout": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/chunks/app/admin/restock/page.js"
+      "static/chunks/app/seller/layout.js"
     ],
-    "/admin/transactions/page": [
+    "/seller/payments/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/chunks/app/admin/transactions/page.js"
+      "static/chunks/app/seller/payments/page.js"
     ],
-    "/admin/customers/page": [
+    "/seller/inventory/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/chunks/app/admin/customers/page.js"
+      "static/chunks/app/seller/inventory/page.js"
     ],
-    "/admin/customers/new/page": [
+    "/seller/alerts/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/chunks/app/admin/customers/new/page.js"
-    ],
-    "/admin/suppliers/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/admin/suppliers/page.js"
-    ],
-    "/admin/suppliers/new/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/admin/suppliers/new/page.js"
-    ],
-    "/admin/expenses/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/admin/expenses/page.js"
-    ],
-    "/admin/reports/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/admin/reports/page.js"
-    ],
-    "/admin/stock-history/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/admin/stock-history/page.js"
-    ],
-    "/admin/users/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/admin/users/page.js"
-    ],
-    "/admin/settings/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/admin/settings/page.js"
+      "static/chunks/app/seller/alerts/page.js"
     ],
     "/cashier/transactions/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
       "static/chunks/app/cashier/transactions/page.js"
     ],
-    "/admin/export/page": [
+    "/cashier/sale/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/chunks/app/admin/export/page.js"
-    ],
-    "/_not-found/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/_not-found/page.js"
-    ],
-    "/admin/inventory/[id]/edit/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/admin/inventory/[id]/edit/page.js"
-    ],
-    "/admin/expenses/new/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/admin/expenses/new/page.js"
-    ],
-    "/cashier/customers/new/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/cashier/customers/new/page.js"
+      "static/chunks/app/cashier/sale/page.js"
     ]
   }
 }

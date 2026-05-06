@@ -1,11 +1,17 @@
 {
+  "/api/payments/route": "app/api/payments/route.js",
   "/api/auth/[...nextauth]/route": "app/api/auth/[...nextauth]/route.js",
   "/api/transactions/route": "app/api/transactions/route.js",
+  "/login/page": "app/login/page.js",
+  "/page": "app/page.js",
+  "/api/products/route": "app/api/products/route.js",
+  "/api/customers/route": "app/api/customers/route.js",
   "/api/shifts/current/route": "app/api/shifts/current/route.js",
-  "/api/shifts/[id]/route": "app/api/shifts/[id]/route.js",
-  "/cashier/shift/page": "app/cashier/shift/page.js",
-  "/cashier/transactions/page": "app/cashier/transactions/page.js",
+  "/cashier/page": "app/cashier/page.js",
   "/cashier/sale/page": "app/cashier/sale/page.js",
-  "/cashier/customers/new/page": "app/cashier/customers/new/page.js",
-  "/cashier/customers/page": "app/cashier/customers/page.js"
+  "/cashier/payments/page": "app/cashier/payments/page.js",
+  "/cashier/customers/page": "app/cashier/customers/page.js",
+  "/cashier/inventory/page": "app/cashier/inventory/page.js",
+  "/cashier/shift/page": "app/cashier/shift/page.js",
+  "/cashier/transactions/page": "app/cashier/transactions/page.js"
 }
