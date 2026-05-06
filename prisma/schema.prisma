@@ -1,0 +1,240 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id           String        @id @default(cuid())
+  name         String
+  email        String        @unique
+  password     String
+  role         Role          @default(CASHIER)
+  phone        String?
+  avatar       String?
+  isActive     Boolean       @default(true)
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  alerts       Alert[]       @relation("AlertCreator")
+  shifts       Shift[]
+  transactions Transaction[]
+
+  @@map("users")
+}
+
+model FuelProduct {
+  id               String            @id @default(cuid())
+  name             String
+  fuelType         FuelType
+  unit             String            @default("Litre")
+  currentStock     Float             @default(0)
+  minimumStock     Float             @default(500)
+  maximumStock     Float             @default(50000)
+  costPrice        Float
+  sellingPrice     Float
+  tankCapacity     Float             @default(50000)
+  tankNumber       String?
+  description      String?
+  isActive         Boolean           @default(true)
+  createdAt        DateTime          @default(now())
+  updatedAt        DateTime          @updatedAt
+  priceHistories   PriceHistory[]
+  stockMovements   StockMovement[]
+  transactionItems TransactionItem[]
+
+  @@map("fuel_products")
+}
+
+model Supplier {
+  id             String          @id @default(cuid())
+  name           String
+  contactName    String?
+  email          String?
+  phone          String
+  address        String?
+  status         SupplierStatus  @default(ACTIVE)
+  balance        Float           @default(0)
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+  stockMovements StockMovement[]
+  transactions   Transaction[]
+
+  @@map("suppliers")
+}
+
+model Customer {
+  id           String        @id @default(cuid())
+  name         String
+  phone        String?
+  email        String?
+  address      String?
+  vehiclePlate String?
+  creditLimit  Float         @default(0)
+  balance      Float         @default(0)
+  isActive     Boolean       @default(true)
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  transactions Transaction[]
+
+  @@map("customers")
+}
+
+model Transaction {
+  id            String            @id @default(cuid())
+  invoiceNumber String            @unique
+  type          TransactionType
+  status        TransactionStatus @default(COMPLETED)
+  paymentMethod PaymentMethod     @default(CASH)
+  totalAmount   Float
+  paidAmount    Float             @default(0)
+  balance       Float             @default(0)
+  discount      Float             @default(0)
+  tax           Float             @default(0)
+  notes         String?
+  createdAt     DateTime          @default(now())
+  updatedAt     DateTime          @updatedAt
+  cashierId     String
+  customerId    String?
+  supplierId    String?
+  items         TransactionItem[]
+  cashier       User              @relation(fields: [cashierId], references: [id])
+  customer      Customer?         @relation(fields: [customerId], references: [id])
+  supplier      Supplier?         @relation(fields: [supplierId], references: [id])
+
+  @@map("transactions")
+}
+
+model TransactionItem {
+  id            String      @id @default(cuid())
+  quantity      Float
+  unitPrice     Float
+  totalPrice    Float
+  costPrice     Float?
+  transactionId String
+  productId     String
+  product       FuelProduct @relation(fields: [productId], references: [id])
+  transaction   Transaction @relation(fields: [transactionId], references: [id], onDelete: Cascade)
+
+  @@map("transaction_items")
+}
+
+model StockMovement {
+  id          String      @id @default(cuid())
+  type        String
+  quantity    Float
+  beforeStock Float
+  afterStock  Float
+  reason      String?
+  reference   String?
+  createdAt   DateTime    @default(now())
+  productId   String
+  supplierId  String?
+  product     FuelProduct @relation(fields: [productId], references: [id])
+  supplier    Supplier?   @relation(fields: [supplierId], references: [id])
+
+  @@map("stock_movements")
+}
+
+model PriceHistory {
+  id           String      @id @default(cuid())
+  oldCostPrice Float
+  newCostPrice Float
+  oldSellPrice Float
+  newSellPrice Float
+  changedBy    String
+  reason       String?
+  createdAt    DateTime    @default(now())
+  productId    String
+  product      FuelProduct @relation(fields: [productId], references: [id])
+
+  @@map("price_histories")
+}
+
+model Shift {
+  id          String    @id @default(cuid())
+  startTime   DateTime  @default(now())
+  endTime     DateTime?
+  openingCash Float     @default(0)
+  closingCash Float?
+  totalSales  Float     @default(0)
+  totalFuel   Float     @default(0)
+  notes       String?
+  isActive    Boolean   @default(true)
+  userId      String
+  user        User      @relation(fields: [userId], references: [id])
+
+  @@map("shifts")
+}
+
+model Alert {
+  id          String    @id @default(cuid())
+  type        AlertType
+  title       String
+  message     String
+  isRead      Boolean   @default(false)
+  createdAt   DateTime  @default(now())
+  createdById String
+  createdBy   User      @relation("AlertCreator", fields: [createdById], references: [id])
+
+  @@map("alerts")
+}
+
+model Expense {
+  id          String   @id @default(cuid())
+  title       String
+  amount      Float
+  category    String
+  description String?
+  date        DateTime @default(now())
+  createdAt   DateTime @default(now())
+
+  @@map("expenses")
+}
+
+enum Role {
+  ADMIN
+  CASHIER
+  SELLER
+}
+
+enum FuelType {
+  PETROL
+  DIESEL
+  KEROSENE
+  LPG
+}
+
+enum TransactionType {
+  SALE
+  RESTOCK
+  TRANSFER
+  ADJUSTMENT
+}
+
+enum TransactionStatus {
+  PENDING
+  COMPLETED
+  CANCELLED
+  REFUNDED
+}
+
+enum PaymentMethod {
+  CASH
+  BANK_TRANSFER
+  CHEQUE
+  CREDIT
+}
+
+enum SupplierStatus {
+  ACTIVE
+  INACTIVE
+}
+
+enum AlertType {
+  LOW_STOCK
+  PRICE_CHANGE
+  EXPIRY
+  SYSTEM
+}

@@ -1,0 +1,11 @@
+{
+  "/api/auth/[...nextauth]/route": "app/api/auth/[...nextauth]/route.js",
+  "/api/transactions/route": "app/api/transactions/route.js",
+  "/api/shifts/current/route": "app/api/shifts/current/route.js",
+  "/api/shifts/[id]/route": "app/api/shifts/[id]/route.js",
+  "/cashier/shift/page": "app/cashier/shift/page.js",
+  "/cashier/transactions/page": "app/cashier/transactions/page.js",
+  "/cashier/sale/page": "app/cashier/sale/page.js",
+  "/cashier/customers/new/page": "app/cashier/customers/new/page.js",
+  "/cashier/customers/page": "app/cashier/customers/page.js"
+}
